@@ -1,7 +1,3 @@
-<QuickEdit file="app/products/[id]/page.tsx">
-Replace the entire content with:
-
-```tsx
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { supabase } from '@/utils/supabase'
@@ -37,13 +33,13 @@ export default async function ProductDetails({ params }: { params: { id: string 
           <CardTitle className="text-2xl sm:text-3xl">{product.title}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="h-64 sm:h-96 bg-gray-200 rounded-md mb-4 relative">
+          <div className="aspect-video relative overflow-hidden rounded-md">
             <Image 
-              src={product.image_url || '/placeholder.svg?height=384&width=640'} 
+              src={product.image_url || '/placeholder.svg'}
               alt={product.title}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-md"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           <p className="text-base sm:text-lg">{product.description}</p>
@@ -51,13 +47,15 @@ export default async function ProductDetails({ params }: { params: { id: string 
             <span className="text-xl sm:text-2xl font-bold">₱{product.price.toFixed(2)}</span>
             <span className="text-sm sm:text-base">Seller: {product.name}</span>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {product.tags && product.tags.map((tag) => (
-              <span key={tag} className="bg-gray-200 text-gray-800 text-xs sm:text-sm px-2 py-1 rounded-full">
-                {tag}
-              </span>
-            ))}
-          </div>
+          {product.tags && product.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {product.tags.map((tag: string) => (
+                <span key={tag} className="bg-gray-200 text-gray-800 text-xs sm:text-sm px-2 py-1 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
           <Button className="w-full sm:w-auto">Add to Cart</Button>
