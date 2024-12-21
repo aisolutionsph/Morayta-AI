@@ -38,8 +38,7 @@ export async function createListing(formData: FormData) {
       .upload(fileName, imageFile, {
         cacheControl: '3600',
         upsert: false,
-        contentType: imageFile.type,
-        public: true
+        contentType: imageFile.type
       })
 
     if (uploadError) {
