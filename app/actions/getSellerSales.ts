@@ -2,27 +2,35 @@
 
 import { supabase } from '@/utils/supabase'
 
-interface ProductListing {
-  id: string;
-  title: string;
-  seller_email: string;
-}
+type Database = {
+  public: {
+    Tables: {
+      sales: {
+        Row: {
+          id: string;
+          amount: number;
+          created_at: string;
+        };
+      };
+      product_listings: {
+        Row: {
+          id: string;
+          title: string;
+          seller_email: string;
+        };
+      };
+    };
+  };
+};
 
-interface Sale {
+type DbResult = {
   id: string;
   amount: number;
   created_at: string;
-  product_listings: ProductListing;
-}
+  product_listings: Database['public']['Tables']['product_listings']['Row'];
+};
 
-interface SaleResponse {
-  id: string;
-  amount: number;
-  created_at: string;
-  product_title: string;
-}
-
-export async function getSellerSales(sellerEmail: string): Promise<SaleResponse[]> {
+export async function getSellerSales(sellerEmail: string) {
   const { data, error } = await supabase
     .from('sales')
     .select(`
@@ -43,7 +51,10 @@ export async function getSellerSales(sellerEmail: string): Promise<SaleResponse[
     return []
   }
 
-  return (data as Sale[]).map(sale => ({
+  // First cast to unknown, then to our known type
+  const typedData = (data as unknown) as DbResult[]
+
+  return typedData.map(sale => ({
     id: sale.id,
     amount: sale.amount,
     created_at: sale.created_at,
