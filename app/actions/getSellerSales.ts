@@ -2,6 +2,17 @@
 
 import { supabase } from '@/utils/supabase'
 
+interface Sale {
+  id: string;
+  amount: number;
+  created_at: string;
+  product_listings: {
+    id: string;
+    title: string;
+    seller_email: string;
+  };
+}
+
 export async function getSellerSales(sellerEmail: string) {
   const { data, error } = await supabase
     .from('sales')
@@ -23,7 +34,7 @@ export async function getSellerSales(sellerEmail: string) {
     return []
   }
 
-  return data.map(sale => ({
+  return (data as Sale[]).map(sale => ({
     id: sale.id,
     amount: sale.amount,
     created_at: sale.created_at,
