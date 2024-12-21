@@ -2,18 +2,27 @@
 
 import { supabase } from '@/utils/supabase'
 
+interface ProductListing {
+  id: string;
+  title: string;
+  seller_email: string;
+}
+
 interface Sale {
   id: string;
   amount: number;
   created_at: string;
-  product_listings: {
-    id: string;
-    title: string;
-    seller_email: string;
-  };
+  product_listings: ProductListing;
 }
 
-export async function getSellerSales(sellerEmail: string) {
+interface SaleResponse {
+  id: string;
+  amount: number;
+  created_at: string;
+  product_title: string;
+}
+
+export async function getSellerSales(sellerEmail: string): Promise<SaleResponse[]> {
   const { data, error } = await supabase
     .from('sales')
     .select(`
