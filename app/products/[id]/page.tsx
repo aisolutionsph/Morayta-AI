@@ -1,3 +1,4 @@
+import { use } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { supabase } from '@/utils/supabase'
@@ -19,12 +20,13 @@ async function getProduct(id: string) {
   return data
 }
 
-type Props = {
-  params: { id: string }
+type PageProps = {
+  params: Promise<{ id: string }>
 }
 
-export default async function ProductDetails({ params }: Props) {
-  const product = await getProduct(params.id)
+export default function ProductDetails({ params }: PageProps) {
+  const { id } = use(params)
+  const product = use(getProduct(id))
 
   if (!product) {
     notFound()
