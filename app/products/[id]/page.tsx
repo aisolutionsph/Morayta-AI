@@ -19,14 +19,11 @@ async function getProduct(id: string) {
   return data
 }
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+type Props = {
+  params: { id: string }
 }
 
-export default async function ProductDetails({ params, searchParams }: PageProps) {
+export default async function ProductDetails({ params }: Props) {
   const product = await getProduct(params.id)
 
   if (!product) {
