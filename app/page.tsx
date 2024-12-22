@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { getProducts } from './actions/getProducts'
 import Image from 'next/image'
 import ClerkWrapper from '@/components/ClerkWrapper'
-
+// dev test
 export default async function Home() {
   const latestProducts = await getProducts()
 
