@@ -4,8 +4,19 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSellerSales } from '@/app/actions/getSellerSales'
 
-export function SalesOverview({ userEmail }: { userEmail: string }) {
-  const [sales, setSales] = useState([])
+interface Sale {
+  id: string;
+  amount: number;
+  created_at: string;
+  product_title: string;
+}
+
+interface SalesOverviewProps {
+  userEmail: string;
+}
+
+export function SalesOverview({ userEmail }: SalesOverviewProps) {
+  const [sales, setSales] = useState<Sale[]>([])
 
   useEffect(() => {
     async function fetchSales() {
