@@ -2,6 +2,19 @@
 
 import { supabase } from '@/utils/supabase'
 
+interface ProductListing {
+  id: string;
+  title: string;
+  seller_email: string;
+}
+
+interface DatabaseSale {
+  id: string;
+  amount: number;
+  created_at: string;
+  product_listings: ProductListing;
+}
+
 interface Sale {
   id: string;
   amount: number;
@@ -30,7 +43,8 @@ export async function getSellerSales(sellerEmail: string): Promise<Sale[]> {
     return []
   }
 
-  return data.map(sale => ({
+  // Cast to unknown first, then to our specific type
+  return ((data as unknown) as DatabaseSale[]).map(sale => ({
     id: sale.id,
     amount: sale.amount,
     created_at: sale.created_at,
