@@ -56,7 +56,7 @@ export async function createListing(formData: FormData) {
       .from('product_listings')
       .insert([
         { 
-          id: uuidv4(), // Add this line to generate a UUID for the product
+          product_id: uuidv4(), // Add this line to generate a UUID for the product
           name, 
           seller_email, 
           title, 
