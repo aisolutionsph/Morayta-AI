@@ -1,8 +1,9 @@
 'use server'
 
 import { supabase } from '@/utils/supabase'
+import type { Product } from './getProducts'
 
-export async function getSellerProducts(sellerEmail: string) {
+export async function getSellerProducts(sellerEmail: string): Promise<Product[]> {
   const { data, error } = await supabase
     .from('product_listings')
     .select('*')
@@ -14,6 +15,6 @@ export async function getSellerProducts(sellerEmail: string) {
     return []
   }
 
-  return data
+  return data as Product[]
 }
 

@@ -6,9 +6,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import Link from 'next/link'
 import { getSellerProducts } from '@/app/actions/getSellerProducts'
 import { deleteProduct } from '@/app/actions/deleteProduct'
+import type { Product } from '@/app/actions/getProducts'
 
-export function ProductListings({ userEmail }: { userEmail: string }) {
-  const [products, setProducts] = useState([])
+interface ProductListingsProps {
+  userEmail: string;
+}
+
+export function ProductListings({ userEmail }: ProductListingsProps) {
+  const [products, setProducts] = useState<Product[]>([])
 
   useEffect(() => {
     async function fetchProducts() {
