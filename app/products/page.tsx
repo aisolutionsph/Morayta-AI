@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { getProducts } from '../actions/getProducts'
+import { getProducts, Product } from '../actions/getProducts'
 import { TAG_CATEGORIES } from '../constants/tags'
 import Image from 'next/image'
 
@@ -20,7 +20,7 @@ const PRICE_RANGES = [
 ]
 
 export default function Products() {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState<Product[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)

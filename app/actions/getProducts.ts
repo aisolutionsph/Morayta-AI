@@ -2,6 +2,18 @@
 
 import { supabase } from '@/utils/supabase'
 
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image_url: string;
+  name: string;
+  seller_email: string;
+  tags: string[];
+  created_at: string;
+}
+
 export async function getProducts() {
   const { data, error } = await supabase
     .from('product_listings')
@@ -13,6 +25,6 @@ export async function getProducts() {
     return []
   }
 
-  return data
+  return data as Product[]
 }
 
