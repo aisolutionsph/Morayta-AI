@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { getSellerProducts } from '@/app/actions/getSellerProducts'
 import { deleteProduct } from '@/app/actions/deleteProduct'
 import type { Product } from '@/app/actions/getProducts'
+import Image from 'next/image'
 
 interface ProductListingsProps {
   userEmail: string;
@@ -18,12 +19,14 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
   useEffect(() => {
     async function fetchProducts() {
       const fetchedProducts = await getSellerProducts(userEmail)
-      setProducts(fetchedProducts)
+      setProducts(fetchedProducts.filter(product => product && product.id))
     }
     fetchProducts()
   }, [userEmail])
 
   const handleDelete = async (productId: string) => {
+    if (!productId) return
+    
     const result = await deleteProduct(productId, userEmail)
     if (result.success) {
       setProducts(products.filter(product => product.id !== productId))
@@ -41,17 +44,18 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {products.map((product) => product && product.id ? (
           <Card key={product.id}>
             <CardHeader>
               <CardTitle>{product.title}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-40 bg-gray-200 rounded-md mb-2">
-                <img 
+              <div className="relative h-40 w-full mb-2">
+                <Image 
                   src={product.image_url || '/placeholder.svg?height=160&width=300'} 
                   alt={product.title}
-                  className="w-full h-full object-cover rounded-md"
+                  fill
+                  className="object-cover rounded-md"
                 />
               </div>
               <p className="font-semibold">₱{product.price.toFixed(2)}</p>
@@ -60,10 +64,15 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
               <Button variant="outline" asChild>
                 <Link href={`/products/${product.id}`}>View</Link>
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(product.id)}>Delete</Button>
+              <Button 
+                variant="destructive" 
+                onClick={() => handleDelete(product.id)}
+              >
+                Delete
+              </Button>
             </CardFooter>
           </Card>
-        ))}
+        ) : null)}
       </div>
     </div>
   )
