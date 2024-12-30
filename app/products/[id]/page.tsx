@@ -45,11 +45,13 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
 }
 
 interface PageProps {
-  params: { id: string }
+  params: {
+    id: string;
+  };
 }
 
 export default async function ProductDetails({ params }: PageProps) {
-  const { id } = await Promise.resolve(params)
+  const { id } = params
   const product = await getProduct(id)
 
   if (!product) {
