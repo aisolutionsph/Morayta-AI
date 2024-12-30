@@ -12,10 +12,10 @@ interface ProductWithProfile {
   title: string;
   description: string;
   price: number;
-  image_url: string;
+  image_url: string | null;
   name: string;
   seller_email: string;
-  tags: string[];
+  tags: string[] | null;
   created_at: string;
   seller_profile?: {
     facebook_profile_link: string | null;
@@ -45,11 +45,11 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
   }
 }
 
-interface PageProps {
-  params: { id: string }
+type PageParams = {
+  id: string;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
   const product = await getProduct(params.id)
   
   if (!product) {
@@ -64,14 +64,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function ProductPage({ params }: { params: PageParams }) {
   const product = await getProduct(params.id)
 
   if (!product) {
     notFound()
   }
-
-  const facebookProfileLink = product.seller_profile?.facebook_profile_link
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -96,7 +94,7 @@ export default async function Page({ params }: PageProps) {
           </div>
           {product.tags && product.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag: string) => (
+              {product.tags.map((tag) => (
                 <span key={tag} className="bg-gray-200 text-gray-800 text-xs sm:text-sm px-2 py-1 rounded-full">
                   {tag}
                 </span>
@@ -106,7 +104,7 @@ export default async function Page({ params }: PageProps) {
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
           <AddToCartButton product={product} />
-          <ContactSellerButton facebookProfileLink={facebookProfileLink} />
+          <ContactSellerButton facebookProfileLink={product.seller_profile?.facebook_profile_link} />
         </CardFooter>
       </Card>
     </div>
