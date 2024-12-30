@@ -1,32 +1,75 @@
-import { use } from 'react'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { supabase } from '@/utils/supabase'
-import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import { ContactSellerButton } from '@/components/contact-seller-button'
+import { AddToCartButton } from '@/components/add-to-cart-button'
 
-async function getProduct(id: string) {
-  const { data, error } = await supabase
-    .from('product_listings')
-    .select('*')
-    .eq('id', id)
-    .single()
+interface ProductWithProfile {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image_url: string | null;
+  name: string;
+  seller_email: string;
+  tags: string[] | null;
+  created_at: string;
+  seller_profile?: {
+    facebook_profile_link: string | null;
+  } | null;
+}
 
-  if (error) {
-    console.error('Error fetching product:', error)
+async function getProduct(id: string): Promise<ProductWithProfile | null> {
+  try {
+    const { data, error } = await supabase
+      .from('product_listings')
+      .select(`
+        *,
+        seller_profile:seller_profiles!seller_email(facebook_profile_link)
+      `)
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      console.error('Error fetching product:', error)
+      return null
+    }
+
+    return data as ProductWithProfile
+  } catch (err) {
+    console.error('Unexpected error:', err)
     return null
   }
-
-  return data
 }
 
-type PageProps = {
-  params: Promise<{ id: string }>
+type Params = Promise<{ id: string }>
+
+interface Props {
+  params: Params;
 }
 
-export default function ProductDetails({ params }: PageProps) {
-  const { id } = use(params)
-  const product = use(getProduct(id))
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const resolvedParams = await params
+  const product = await getProduct(resolvedParams.id)
+  
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+    }
+  }
+
+  return {
+    title: product.title,
+    description: product.description,
+  }
+}
+
+export default async function ProductPage({ params }: Props) {
+  const resolvedParams = await params
+  const product = await getProduct(resolvedParams.id)
 
   if (!product) {
     notFound()
@@ -55,7 +98,7 @@ export default function ProductDetails({ params }: PageProps) {
           </div>
           {product.tags && product.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag: string) => (
+              {product.tags.map((tag) => (
                 <span key={tag} className="bg-gray-200 text-gray-800 text-xs sm:text-sm px-2 py-1 rounded-full">
                   {tag}
                 </span>
@@ -64,8 +107,8 @@ export default function ProductDetails({ params }: PageProps) {
           )}
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
-          <Button className="w-full sm:w-auto">Add to Cart</Button>
-          <Button variant="outline" className="w-full sm:w-auto">Contact Seller</Button>
+          <AddToCartButton product={product} />
+          <ContactSellerButton facebookProfileLink={product.seller_profile?.facebook_profile_link} />
         </CardFooter>
       </Card>
     </div>

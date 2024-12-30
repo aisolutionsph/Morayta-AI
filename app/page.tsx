@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { getProducts } from './actions/getProducts'
 import Image from 'next/image'
 import ClerkWrapper from '@/components/ClerkWrapper'
-
+// dev test
 export default async function Home() {
   const latestProducts = await getProducts()
 
@@ -51,24 +51,6 @@ export default async function Home() {
                 </CardFooter>
               </Card>
             ))}
-          </div>
-        </section>
-
-        <section className="py-12">
-          <h2 className="text-2xl font-semibold mb-4 text-center">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">1. Create an Account</h3>
-              <p>Sign up and set up your profile</p>
-            </div>
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">2. List or Browse</h3>
-              <p>Start selling your products or browse listings</p>
-            </div>
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">3. Buy or Sell</h3>
-              <p>Complete transactions securely through our platform</p>
-            </div>
           </div>
         </section>
       </div>

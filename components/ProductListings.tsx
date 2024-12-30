@@ -15,11 +15,21 @@ interface ProductListingsProps {
 
 export function ProductListings({ userEmail }: ProductListingsProps) {
   const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchProducts() {
-      const fetchedProducts = await getSellerProducts(userEmail)
-      setProducts(fetchedProducts.filter(product => product && product.id))
+      setIsLoading(true)
+      try {
+        const fetchedProducts = await getSellerProducts(userEmail)
+        setProducts(fetchedProducts)
+      } catch (err) {
+        console.error('Error fetching products:', err)
+        setError('Failed to load products. Please try again later.')
+      } finally {
+        setIsLoading(false)
+      }
     }
     fetchProducts()
   }, [userEmail])
@@ -35,6 +45,14 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
     }
   }
 
+  if (isLoading) {
+    return <div>Loading products...</div>
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -43,37 +61,41 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
           <Link href="/sell">Add New Product</Link>
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => product && product.id ? (
-          <Card key={product.id}>
-            <CardHeader>
-              <CardTitle>{product.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="relative h-40 w-full mb-2">
-                <Image 
-                  src={product.image_url || '/placeholder.svg?height=160&width=300'} 
-                  alt={product.title}
-                  fill
-                  className="object-cover rounded-md"
-                />
-              </div>
-              <p className="font-semibold">₱{product.price.toFixed(2)}</p>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" asChild>
-                <Link href={`/products/${product.id}`}>View</Link>
-              </Button>
-              <Button 
-                variant="destructive" 
-                onClick={() => handleDelete(product.id)}
-              >
-                Delete
-              </Button>
-            </CardFooter>
-          </Card>
-        ) : null)}
-      </div>
+      {products.length === 0 ? (
+        <p>You haven't listed any products yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <Card key={product.id}>
+              <CardHeader>
+                <CardTitle>{product.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="relative h-40 w-full mb-2">
+                  <Image 
+                    src={product.image_url || '/placeholder.svg?height=160&width=300'} 
+                    alt={product.title}
+                    fill
+                    className="object-cover rounded-md"
+                  />
+                </div>
+                <p className="font-semibold">₱{product.price.toFixed(2)}</p>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button variant="outline" asChild>
+                  <Link href={`/products/${product.id}`}>View</Link>
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  onClick={() => handleDelete(product.id)}
+                >
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

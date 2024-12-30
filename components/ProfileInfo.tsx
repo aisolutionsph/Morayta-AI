@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { getSellerProfile, updateSellerProfile } from '@/app/actions/sellerProfile'
 import { UserButton } from '@clerk/nextjs'
 
@@ -12,17 +11,24 @@ export function ProfileInfo({ userEmail }: { userEmail: string }) {
   const [profile, setProfile] = useState({
     name: '',
     email: '',
-    bio: ''
+    facebook_profile_link: ''
   })
 
   useEffect(() => {
     async function fetchProfile() {
       const fetchedProfile = await getSellerProfile(userEmail)
       if (fetchedProfile) {
-        setProfile(fetchedProfile)
+        setProfile({
+          name: fetchedProfile.name || '',
+          email: fetchedProfile.email || userEmail,
+          facebook_profile_link: fetchedProfile.facebook_profile_link || ''
+        })
       } else {
-        // If profile doesn't exist, set email to current seller's email
-        setProfile(prev => ({ ...prev, email: userEmail }))
+        setProfile({
+          name: '',
+          email: userEmail,
+          facebook_profile_link: ''
+        })
       }
     }
     fetchProfile()
@@ -30,7 +36,10 @@ export function ProfileInfo({ userEmail }: { userEmail: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const result = await updateSellerProfile(userEmail, { name: profile.name, bio: profile.bio })
+    const result = await updateSellerProfile(userEmail, { 
+      name: profile.name, 
+      facebook_profile_link: profile.facebook_profile_link 
+    })
     if (result.success) {
       alert('Profile updated successfully')
     } else {
@@ -63,11 +72,13 @@ export function ProfileInfo({ userEmail }: { userEmail: string }) {
           />
         </div>
         <div>
-          <Label htmlFor="bio">Bio</Label>
-          <Textarea 
-            id="bio" 
-            value={profile.bio} 
-            onChange={(e) => setProfile({...profile, bio: e.target.value})}
+          <Label htmlFor="facebook_profile_link">Facebook Profile Link</Label>
+          <Input 
+            id="facebook_profile_link" 
+            type="url"
+            placeholder="https://facebook.com/your.profile"
+            value={profile.facebook_profile_link} 
+            onChange={(e) => setProfile({...profile, facebook_profile_link: e.target.value})}
           />
         </div>
         <Button type="submit">Update Profile</Button>
