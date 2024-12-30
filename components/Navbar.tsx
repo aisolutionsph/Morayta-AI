@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@clerk/nextjs"
@@ -12,8 +13,16 @@ export default function Navbar() {
     <nav className="bg-white shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Link href="/" className="text-2xl font-bold text-gray-800">MarketPlace</Link>
-          
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/morayta-ai-logo.svg"
+              alt="Morayta AI Marketplace"
+              width={150}
+              height={40}
+              className="h-10 w-auto"
+              priority
+            />
+          </Link>
           
           <div className="space-x-4">
             <Button 
