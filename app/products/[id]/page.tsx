@@ -45,15 +45,16 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
   }
 }
 
-interface GenerateMetadataProps {
-  params: { id: string };
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export async function generateMetadata(
-  { params, searchParams }: GenerateMetadataProps
-): Promise<Metadata> {
-  const product = await getProduct(params.id)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params
+  const product = await getProduct(resolvedParams.id)
   
   if (!product) {
     return {
@@ -67,13 +68,9 @@ export async function generateMetadata(
   }
 }
 
-interface PageProps {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 export default async function ProductPage({ params, searchParams }: PageProps) {
-  const product = await getProduct(params.id)
+  const resolvedParams = await params
+  const product = await getProduct(resolvedParams.id)
 
   if (!product) {
     notFound()
