@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,7 +6,7 @@ import { supabase } from '@/utils/supabase'
 import Image from 'next/image'
 import { ContactSellerButton } from '@/components/contact-seller-button'
 import { AddToCartButton } from '@/components/add-to-cart-button'
-  
+
 interface ProductWithProfile {
   id: string;
   title: string;
@@ -44,14 +45,26 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
   }
 }
 
-type Props = {
-  params: {
-    id: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+interface PageProps {
+  params: { id: string }
 }
 
-export default async function ProductDetails({ params, searchParams }: Props) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const product = await getProduct(params.id)
+  
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+    }
+  }
+
+  return {
+    title: product.title,
+    description: product.description,
+  }
+}
+
+export default async function Page({ params }: PageProps) {
   const product = await getProduct(params.id)
 
   if (!product) {
