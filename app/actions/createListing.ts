@@ -22,6 +22,35 @@ export async function createListing(formData: FormData) {
   if (!imageFile) return { error: 'Product image is required' }
 
   try {
+    // First, ensure seller profile exists
+    const { data: existingProfile, error: profileError } = await supabase
+      .from('seller_profiles')
+      .select('email')
+      .eq('email', seller_email)
+      .single()
+
+    if (!existingProfile) {
+      // Create seller profile if it doesn't exist
+      const { error: createProfileError } = await supabase
+        .from('seller_profiles')
+        .insert([
+          {
+            email: seller_email,
+            name: name,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ])
+
+      if (createProfileError) {
+        console.error('Error creating seller profile:', createProfileError)
+        return { error: 'Failed to create seller profile' }
+      }
+    }
+
+    // Generate a unique product ID
+    const product_id = uuidv4()
+
     // Handle image upload
     const fileExt = imageFile.name.split('.').pop()
     const fileName = `${uuidv4()}.${fileExt}`
@@ -56,7 +85,7 @@ export async function createListing(formData: FormData) {
       .from('product_listings')
       .insert([
         { 
-          product_id: uuidv4(), // Add this line to generate a UUID for the product
+          product_id: product_id, // Add the generated product_id here
           name, 
           seller_email, 
           title, 
