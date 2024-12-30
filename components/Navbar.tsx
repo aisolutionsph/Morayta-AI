@@ -34,12 +34,6 @@ export default function Navbar() {
               </Button>
             ) : (
               <>
-                <Button variant="ghost" asChild>
-                  <Link href="/sign-in">Sign In</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/sign-up">Sign Up</Link>
-                </Button>
               </>
             )}
           </div>
