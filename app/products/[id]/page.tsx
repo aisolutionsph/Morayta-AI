@@ -1,36 +1,62 @@
-import { use } from 'react'
+import { notFound } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { supabase } from '@/utils/supabase'
-import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import { ContactSellerButton } from '@/components/contact-seller-button'
+import { AddToCartButton } from '@/components/add-to-cart-button'
+  
+interface ProductWithProfile {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image_url: string;
+  name: string;
+  seller_email: string;
+  tags: string[];
+  created_at: string;
+  seller_profile?: {
+    facebook_profile_link: string | null;
+  } | null;
+}
 
-async function getProduct(id: string) {
-  const { data, error } = await supabase
-    .from('product_listings')
-    .select('*')
-    .eq('id', id)
-    .single()
+async function getProduct(id: string): Promise<ProductWithProfile | null> {
+  try {
+    const { data, error } = await supabase
+      .from('product_listings')
+      .select(`
+        *,
+        seller_profile:seller_profiles!seller_email(facebook_profile_link)
+      `)
+      .eq('id', id)
+      .single()
 
-  if (error) {
-    console.error('Error fetching product:', error)
+    if (error) {
+      console.error('Error fetching product:', error)
+      return null
+    }
+
+    return data as ProductWithProfile
+  } catch (err) {
+    console.error('Unexpected error:', err)
     return null
   }
-
-  return data
 }
 
-type PageProps = {
-  params: Promise<{ id: string }>
+interface PageProps {
+  params: { id: string }
 }
 
-export default function ProductDetails({ params }: PageProps) {
-  const { id } = use(params)
-  const product = use(getProduct(id))
+export default async function ProductDetails({ params }: PageProps) {
+  const { id } = await Promise.resolve(params)
+  const product = await getProduct(id)
 
   if (!product) {
     notFound()
   }
+
+  const facebookProfileLink = product.seller_profile?.facebook_profile_link
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -64,8 +90,8 @@ export default function ProductDetails({ params }: PageProps) {
           )}
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
-          <Button className="w-full sm:w-auto">Add to Cart</Button>
-          <Button variant="outline" className="w-full sm:w-auto">Contact Seller</Button>
+          <AddToCartButton product={product} />
+          <ContactSellerButton facebookProfileLink={facebookProfileLink} />
         </CardFooter>
       </Card>
     </div>
