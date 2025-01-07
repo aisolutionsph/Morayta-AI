@@ -185,10 +185,10 @@ export default function Products() {
                 <CardContent className="flex-grow">
                   <div className="h-40 bg-gray-200 rounded-md mb-2 relative">
                     <Image 
-                      src={product.image_url || '/placeholder.svg?height=160&width=300'} 
+                      src={product.image_urls?.[0] || '/placeholder.svg?height=160&width=300'} 
                       alt={product.title}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{ objectFit: 'cover' }}
                       className="rounded-md"
                     />
                   </div>

@@ -6,13 +6,13 @@ import { supabase } from '@/utils/supabase'
 import Image from 'next/image'
 import { ContactSellerButton } from '@/components/contact-seller-button'
 import { AddToCartButton } from '@/components/add-to-cart-button'
-
+import { ImageGallery } from '@/components/image-gallery'
 interface ProductWithProfile {
   id: string;
   title: string;
   description: string;
   price: number;
-  image_url: string | null;
+  image_urls: string[]; // Changed from image_url to image_urls array
   name: string;
   seller_email: string;
   tags: string[] | null;
@@ -82,15 +82,7 @@ export default async function ProductPage({ params }: Props) {
           <CardTitle className="text-2xl sm:text-3xl">{product.title}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="aspect-video relative overflow-hidden rounded-md">
-            <Image 
-              src={product.image_url || '/placeholder.svg'}
-              alt={product.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
+          <ImageGallery images={product.image_urls || ['/placeholder.svg']} title={product.title} />
           <p className="text-base sm:text-lg">{product.description}</p>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <span className="text-xl sm:text-2xl font-bold">₱{product.price.toFixed(2)}</span>
