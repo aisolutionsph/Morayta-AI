@@ -7,7 +7,7 @@ export interface Product {
   title: string;
   description: string;
   price: number;
-  image_url: string;
+  image_urls: string[];
   name: string;
   seller_email: string;
   tags: string[];

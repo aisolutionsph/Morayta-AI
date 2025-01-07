@@ -73,10 +73,11 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
               <CardContent>
                 <div className="relative h-40 w-full mb-2">
                   <Image 
-                    src={product.image_url || '/placeholder.svg?height=160&width=300'} 
+                    src={product.image_urls?.[0] || '/placeholder.svg?height=160&width=300'} 
                     alt={product.title}
                     fill
-                    className="object-cover rounded-md"
+                    style={{ objectFit: 'cover' }}
+                    className="rounded-md"
                   />
                 </div>
                 <p className="font-semibold">₱{product.price.toFixed(2)}</p>
