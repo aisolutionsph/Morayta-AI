@@ -1,56 +1,62 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from 'next/link'
-import { getSellerProducts } from '@/app/actions/getSellerProducts'
-import { deleteProduct } from '@/app/actions/deleteProduct'
-import type { Product } from '@/app/actions/getProducts'
-import Image from 'next/image'
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import { getSellerProducts } from "@/app/actions/getSellerProducts";
+import { deleteProduct } from "@/app/actions/deleteProduct";
+import type { Product } from "@/app/actions/getProducts";
+import { ImageContainer } from "./image-container";
 
 interface ProductListingsProps {
   userEmail: string;
 }
 
 export function ProductListings({ userEmail }: ProductListingsProps) {
-  const [products, setProducts] = useState<Product[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProducts() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const fetchedProducts = await getSellerProducts(userEmail)
-        setProducts(fetchedProducts)
+        const fetchedProducts = await getSellerProducts(userEmail);
+        setProducts(fetchedProducts);
       } catch (err) {
-        console.error('Error fetching products:', err)
-        setError('Failed to load products. Please try again later.')
+        console.error("Error fetching products:", err);
+        setError("Failed to load products. Please try again later.");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
-    fetchProducts()
-  }, [userEmail])
+    fetchProducts();
+  }, [userEmail]);
 
   const handleDelete = async (productId: string) => {
-    if (!productId) return
-    
-    const result = await deleteProduct(productId, userEmail)
+    if (!productId) return;
+
+    const result = await deleteProduct(productId, userEmail);
     if (result.success) {
-      setProducts(products.filter(product => product.id !== productId))
+      setProducts(products.filter((product) => product.id !== productId));
     } else {
-      alert('Failed to delete product')
+      alert("Failed to delete product");
     }
-  }
+  };
 
   if (isLoading) {
-    return <div>Loading products...</div>
+    return <div>Loading products...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>
+    return <div>{error}</div>;
   }
 
   return (
@@ -71,23 +77,23 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
                 <CardTitle>{product.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative h-40 w-full mb-2">
-                  <Image 
-                    src={product.image_urls?.[0] || '/placeholder.svg?height=160&width=300'} 
-                    alt={product.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className="rounded-md"
-                  />
-                </div>
-                <p className="font-semibold">₱{product.price.toFixed(2)}</p>
+                <ImageContainer
+                  src={
+                    product.image_urls?.[0] ||
+                    "/placeholder.svg?height=160&width=300"
+                  }
+                  alt={product.title}
+                />
+                <p className="font-semibold mt-2">
+                  ₱{product.price.toFixed(2)}
+                </p>
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline" asChild>
                   <Link href={`/products/${product.id}`}>View</Link>
                 </Button>
-                <Button 
-                  variant="destructive" 
+                <Button
+                  variant="destructive"
                   onClick={() => handleDelete(product.id)}
                 >
                   Delete
@@ -98,6 +104,5 @@ export function ProductListings({ userEmail }: ProductListingsProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
-
