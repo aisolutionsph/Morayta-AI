@@ -19,7 +19,7 @@ export default async function Home() {
       <div className="space-y-8 px-4 sm:px-6 lg:px-8">
         <section className="text-center py-12">
           <h1 className="text-4xl font-bold mb-4">
-            Welcome to Morayta AI Marketplace
+            Welcome to Morayta AI Marketplace (BETA)
           </h1>
           <p className="text-xl mb-6">Buy and sell products in our community</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
