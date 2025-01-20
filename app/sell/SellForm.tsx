@@ -169,7 +169,7 @@ export default function SellForm({ userInfo }: SellFormProps) {
             <Input type="number" id="price" name="price" min="0" step="0.01" required />
           </div>
           <div>
-            <Label>Product Images (Max 5 images, 5MB each)</Label>
+            <Label>Product Images (Max 5 images, 2MB each)</Label>
             <div
               className={`mt-2 border-2 border-dashed rounded-lg p-6 transition-colors ${
                 isDragging 
