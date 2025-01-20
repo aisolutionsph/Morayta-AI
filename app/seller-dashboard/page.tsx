@@ -26,7 +26,7 @@ export default async function SellerDashboard() {
   const profile = await getSellerProfile(userEmail)
 
   if (!profile) {
-    return <div>Error: Profile not found</div>
+    return <div>Error: Profile not found, list at least one product through clicking on "Start Selling" button on the homepage to initiate a seller dashboard profile. Head to home page by clicking the logo on the upper left portion of this page.</div>
   }
 
   return (

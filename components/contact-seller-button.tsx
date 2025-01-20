@@ -1,21 +1,21 @@
-'use client'
+"use client"
 
 import { Button } from "@/components/ui/button"
 
 interface ContactSellerButtonProps {
-  facebookProfileLink: string | null | undefined
+  contactUrl: string | null | undefined
 }
 
-export function ContactSellerButton({ facebookProfileLink }: ContactSellerButtonProps) {
+export function ContactSellerButton({ contactUrl }: ContactSellerButtonProps) {
   return (
-    <Button 
-      variant="outline" 
+    <Button
+      variant="outline"
       className="w-full sm:w-auto"
       onClick={() => {
-        if (facebookProfileLink) {
-          window.open(facebookProfileLink, '_blank', 'noopener,noreferrer')
+        if (contactUrl) {
+          window.open(contactUrl, "_blank", "noopener,noreferrer")
         } else {
-          alert('Seller has not provided a Facebook profile link')
+          alert("Seller has not provided a contact URL")
         }
       }}
     >
