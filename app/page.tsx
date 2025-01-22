@@ -23,12 +23,12 @@ export default async function Home() {
           </h1>
           <p className="text-xl mb-6">Buy and sell products in our community</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button asChild className="w-full sm:w-auto">
+            <button className="px-8 py-2 rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500">
               <Link href="/products">Browse Products</Link>
-            </Button>
-            <Button variant="outline" asChild className="w-full sm:w-auto">
+            </button>
+            <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
               <Link href="/sell">Start Selling</Link>
-            </Button>
+            </button>
           </div>
         </section>
 
