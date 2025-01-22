@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useAuth } from "@clerk/nextjs"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Navbar() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useAuth();
 
   return (
     <nav className="bg-white shadow-lg">
@@ -23,32 +23,22 @@ export default function Navbar() {
               priority
             />
           </Link>
-          
+
           <div className="space-x-4">
-            <Button 
-              variant="default" 
-              className="bg-black hover:bg-gray-800 text-white" 
-              asChild
-            >
+            <button className="px-8 py-2 rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500">
               <Link href="/products">Browse Products</Link>
-            </Button>
-            
+            </button>
+
             {isSignedIn ? (
-              <Button 
-                variant="outline" 
-                className="border-black hover:bg-gray-100" 
-                asChild
-              >
+              <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
                 <Link href="/seller-dashboard">Seller Dashboard</Link>
-              </Button>
+              </button>
             ) : (
-              <>
-              </>
+              <></>
             )}
           </div>
         </div>
       </div>
     </nav>
-  )
+  );
 }
-
