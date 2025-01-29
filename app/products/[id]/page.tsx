@@ -18,7 +18,10 @@ interface ProductWithProfile {
   seller_email: string
   tags: string[] | null
   created_at: string
-  contact_seller_link: string | null // Updated: Added contact_seller_link
+  seller_profile: {
+    facebook_profile_link: string | null
+    instagram_profile_link: string | null
+  } | null
 }
 
 async function getProduct(id: string): Promise<ProductWithProfile | null> {
@@ -26,8 +29,9 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
     const { data, error } = await supabase
       .from("product_listings")
       .select(`
-        *
-      `) // Updated: Removed the seller_profile selection, as it's not needed anymore.
+        *,
+        seller_profile:seller_profiles(facebook_profile_link, instagram_profile_link)
+      `)
       .eq("id", id)
       .single()
 
@@ -36,7 +40,7 @@ async function getProduct(id: string): Promise<ProductWithProfile | null> {
       return null
     }
 
-    return (data || null) as ProductWithProfile | null
+    return data as ProductWithProfile
   } catch (err) {
     console.error("Unexpected error:", err)
     return null
@@ -81,10 +85,10 @@ export default async function ProductPage({ params }: Props) {
         </CardHeader>
         <CardContent className="space-y-4">
           <ImageGallery images={product.image_urls || ["/placeholder.svg"]} title={product.title} />
-          <p className="text-base sm:text-lg">{product.description}</p>
+          <p className="text-base sm:text-lg whitespace-pre-line">{product.description}</p>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <span className="text-xl sm:text-2xl font-bold">₱{product.price.toFixed(2)}</span>
-            <span className="text-sm sm:text-base">Posted By: {product.name}</span>
+            <span className="text-sm sm:text-base">Seller: {product.name}</span>
           </div>
           {product.tags && product.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
@@ -98,7 +102,10 @@ export default async function ProductPage({ params }: Props) {
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
           <AddToCartButton product={product} />
-          <ContactSellerButton contactUrl={product.contact_seller_link} /> {/* Updated: Using contact_seller_link */}
+          <ContactSellerButton
+            facebookUrl={product.seller_profile?.facebook_profile_link || null}
+            instagramUrl={product.seller_profile?.instagram_profile_link || null}
+          />
         </CardFooter>
       </Card>
     </div>

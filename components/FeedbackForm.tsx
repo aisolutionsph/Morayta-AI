@@ -1,12 +1,12 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { submitFeedback } from '@/app/actions/submitFeedback'
+import { submitFeedback } from "@/app/actions/submitFeedback"
 
 export function FeedbackForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -35,7 +35,7 @@ export function FeedbackForm() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-3xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Feedback Form</h2>
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -63,7 +63,7 @@ export function FeedbackForm() {
           <Textarea id="feedback" name="feedback" rows={4} required />
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+          {isSubmitting ? "Submitting..." : "Submit Feedback"}
         </Button>
       </form>
     </div>

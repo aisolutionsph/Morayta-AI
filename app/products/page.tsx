@@ -47,7 +47,10 @@ export default function Products() {
 
   const filteredProducts = products.filter((product) => {
     const matchesTags =
-      selectedTags.length === 0 || (product.tags && product.tags.some((tag) => selectedTags.includes(tag)))
+      selectedTags.length === 0 ||
+      (product.tags &&
+        (product.tags.some((tag) => selectedTags.includes(tag)) ||
+          (selectedTags.includes("FEU Products") && product.tags.includes("FEU Products"))))
 
     let matchesPrice = true
     if (selectedPriceRange) {
@@ -112,19 +115,32 @@ export default function Products() {
             <Accordion type="multiple" value={expandedCategories} onValueChange={setExpandedCategories}>
               {Object.entries(TAG_CATEGORIES).map(([category, tags]) => (
                 <AccordionItem value={category} key={category}>
-                  <AccordionTrigger className="text-sm hover:no-underline">{category}</AccordionTrigger>
+                  <AccordionTrigger
+                    className={`text-sm hover:no-underline ${
+                      category === "FEU Products" ? "text-teal-500 font-semibold" : ""
+                    }`}
+                  >
+                    {category}
+                  </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-2 pl-2">
                       {tags.map((tag) => (
                         <div key={tag} className="flex items-center space-x-2">
                           <Checkbox
-                            id={tag}
+                            id={tag === "FEU Products" ? "feu-products" : tag}
                             checked={selectedTags.includes(tag)}
                             onCheckedChange={(checked) => {
                               setSelectedTags(checked ? [...selectedTags, tag] : selectedTags.filter((t) => t !== tag))
                             }}
                           />
-                          <Label htmlFor={tag} className="text-sm cursor-pointer">
+                          <Label
+                            htmlFor={tag === "FEU Products" ? "feu-products" : tag}
+                            className={
+                              tag === "FEU Products"
+                                ? "text-sm cursor-pointer font-semibold text-teal-500"
+                                : "text-sm cursor-pointer"
+                            }
+                          >
                             {tag}
                           </Label>
                         </div>
@@ -145,7 +161,7 @@ export default function Products() {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full"
+            className="w-full border-2 border-teal-500 focus:ring-teal-500 focus:border-teal-500"
           />
         </div>
         <div className="flex justify-between items-center mb-6">
@@ -170,10 +186,12 @@ export default function Products() {
                   <CardTitle className="line-clamp-1">{product.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <ImageContainer
-                    src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300"}
-                    alt={product.title}
-                  />
+                  <Link href={`/products/${product.id}`} className="block">
+                    <ImageContainer
+                      src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300"}
+                      alt={product.title}
+                    />
+                  </Link>
                   <p className="mt-2 line-clamp-2">{product.description}</p>
                   <p className="font-semibold mt-2">₱{product.price.toFixed(2)}</p>
                   <div className="mt-2 flex flex-wrap gap-1">
