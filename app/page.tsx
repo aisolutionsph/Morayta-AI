@@ -19,14 +19,14 @@ export default async function Home() {
       <div className="space-y-8 px-4 sm:px-6 lg:px-8">
         <section className="text-center py-12">
           <h1 className="text-4xl font-bold mb-4">
-            Welcome to Morayta AI Marketplace (BETA)
+            Welcome to Piyumart (BETA)
           </h1>
           <p className="text-xl mb-6">Buy and sell products in our community</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="px-8 py-2 rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500">
+            <button className="px-8 py-2 rounded-md bg-[#09850d] text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-[#09850d]">
               <Link href="/products">Browse Products</Link>
             </button>
-            <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
+            <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black dark:border-white dark:text-white text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
               <Link href="/sell">Start Selling</Link>
             </button>
           </div>
@@ -63,6 +63,7 @@ export default async function Home() {
           </div>
         </section>
       </div>
+
     </ClerkWrapper>
   );
 }
