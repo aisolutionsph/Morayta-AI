@@ -1,23 +1,21 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
+import { CornerDownRight } from "lucide-react";
 
 export default function AnonymousUser() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="text-center space-y-6 p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-4xl font-bold">
-          Welcome to Morayta AI Marketplace (BETA)
-        </h1>
-        <p className="text-xl text-gray-600">
-          Discover amazing products in our community marketplace
-        </p>
-        <SignInButton>
-          <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
-            Sign in using FEU Email
-          </button>
-        </SignInButton>
-      </div>
-    </div>
+    <>
+      <section className="text-center py-12 my-32">
+        <h1 className="text-4xl font-bold mb-4">Welcome to Piyumart (BETA)</h1>
+        <p className="text-xl mb-6">Buy and sell products in our community</p>
+        <div className="flex items-center justify-center gap-4">
+          <CornerDownRight />
+          <SignInButton>
+            <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black dark:border-white dark:text-white text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+              Sign in using FEU Email
+            </button>
+          </SignInButton>
+        </div>
+      </section>
+    </>
   );
 }

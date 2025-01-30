@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="flex items-center">
             <Image
-              src="/morayta-ai-logo.svg"
+              src="/piyumart.jpg"
               alt="Morayta AI Marketplace"
               width={150}
               height={40}
@@ -25,12 +25,12 @@ export default function Navbar() {
           </Link>
 
           <div className="space-x-4">
-            <button className="px-8 py-2 rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500">
+            <button className="px-8 py-2 rounded-md bg-[#09850d] text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-[#09850d]">
               <Link href="/products">Browse Products</Link>
             </button>
 
             {isSignedIn ? (
-              <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
+              <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black dark:border-white dark:text-white text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
                 <Link href="/seller-dashboard">Seller Dashboard</Link>
               </button>
             ) : (

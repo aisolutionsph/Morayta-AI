@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { getProducts, type Product } from "../actions/getProducts"
 import { TAG_CATEGORIES } from "../constants/tags"
-import Image from "next/image"
 import { ImageContainer } from "@/components/image-container"
 import { Input } from "@/components/ui/input"
 
@@ -27,7 +26,7 @@ export default function Products() {
   const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(["Home & Living"])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(["FEU Products"])
   const [showFilters, setShowFilters] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -117,7 +116,7 @@ export default function Products() {
                 <AccordionItem value={category} key={category}>
                   <AccordionTrigger
                     className={`text-sm hover:no-underline ${
-                      category === "FEU Products" ? "text-teal-500 font-semibold" : ""
+                      category === "FEU Products" ? "text-[#09850d] font-semibold" : ""
                     }`}
                   >
                     {category}
@@ -161,7 +160,7 @@ export default function Products() {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border-2 border-teal-500 focus:ring-teal-500 focus:border-teal-500"
+            className="w-full border-2 border-[#09850d] focus:ring-[#09850d] focus:border-[#09850d]"
           />
         </div>
         <div className="flex justify-between items-center mb-6">
@@ -188,7 +187,7 @@ export default function Products() {
                 <CardContent className="flex-grow">
                   <Link href={`/products/${product.id}`} className="block">
                     <ImageContainer
-                      src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300"}
+                      src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300" || "/placeholder.svg"}
                       alt={product.title}
                     />
                   </Link>

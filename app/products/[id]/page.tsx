@@ -88,7 +88,7 @@ export default async function ProductPage({ params }: Props) {
           <p className="text-base sm:text-lg whitespace-pre-line">{product.description}</p>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <span className="text-xl sm:text-2xl font-bold">₱{product.price.toFixed(2)}</span>
-            <span className="text-sm sm:text-base">Seller: {product.name}</span>
+            <span className="text-sm sm:text-base">Posted By: {product.name}</span>
           </div>
           {product.tags && product.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
