@@ -7,14 +7,6 @@ export default function AnonymousUser() {
     <>
       <section className="relative text-center py-48">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/piyumart_cover.png"
-            alt="Hero background"
-            layout="fill"
-            objectFit="cover"
-            quality={100}
-            priority
-          />
           <div className="absolute inset-0 bg-white opacity-90"></div>
         </div>
         <div className="relative z-10">
