@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Piyumart",
   description: "Buy and sell products in our community marketplace",
   icons: {
-    icon: "/favicon.ico", // Path relative to the public directory
+    icon: "/favicon_p.ico", // Path relative to the public directory
   },
 };
 
