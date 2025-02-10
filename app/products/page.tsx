@@ -187,9 +187,6 @@ export default function Products() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
                 <Card key={product.id} className="flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="line-clamp-1">{product.title}</CardTitle>
-                  </CardHeader>
                   <CardContent className="flex-grow">
                     <Link href={`/products/${product.id}`} className="block">
                       <ImageContainer
@@ -197,7 +194,7 @@ export default function Products() {
                         alt={product.title}
                       />
                     </Link>
-                    <p className="mt-2 line-clamp-2">{product.description}</p>
+                    <p className="mt-2 line-clamp-2">{product.title}</p>
                     <p className="font-semibold mt-2">₱{product.price.toFixed(2)}</p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {product.tags &&
