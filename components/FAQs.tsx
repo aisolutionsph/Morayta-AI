@@ -44,7 +44,7 @@ const FAQ_ITEMS = [
 
 export function FAQs() {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-2">
       <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
       <Accordion type="single" collapsible className="w-full">
         {FAQ_ITEMS.map((item, index) => (
