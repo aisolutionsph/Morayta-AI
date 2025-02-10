@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <ClerkWrapper>
       <div className="space-y-8 px-4 sm:px-6 lg:px-8">
-        <section className="text-center py-12">
+        <section className="relative text-center py-48">
           <h1 className="text-4xl font-bold mb-4">
             Welcome to Piyumart (BETA)
           </h1>
@@ -32,36 +32,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Latest Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {latestProducts.slice(0, 3).map((product) => (
-              <Card key={product.id} className="flex flex-col">
-                <CardHeader>
-                  <CardTitle className="line-clamp-1">
-                    {product.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <ImageContainer
-                    src={
-                      product.image_urls?.[0] ||
-                      "/placeholder.svg?height=160&width=300"
-                    }
-                    alt={product.title}
-                    priority
-                  />
-                  <p className="mt-2 line-clamp-2">{product.description}</p>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full">
-                    <Link href={`/products/${product.id}`}>View Details</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </section>
+
       </div>
 
     </ClerkWrapper>
