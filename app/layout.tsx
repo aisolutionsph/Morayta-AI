@@ -6,7 +6,7 @@ import { FeedbackForm } from "@/components/FeedbackForm";
 import { Separator } from "@/components/ui/separator";
 import { ClerkProvider } from "@clerk/nextjs";
 import { FAQs } from "@/components/FAQs";
-
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -31,6 +31,7 @@ export default function RootLayout({
             <Separator className="my-8" />
             <FeedbackForm />
           </main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

@@ -27,7 +27,6 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedCategories, setExpandedCategories] = useState<string[]>(["FEU Products"])
-  const [showFilters, setShowFilters] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
@@ -78,139 +77,147 @@ export default function Products() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4">
-      <div className="w-full md:w-1/4">
-        <Button onClick={() => setShowFilters(!showFilters)} className="w-full mb-4 md:hidden">
-          {showFilters ? "Hide Filters" : "Show Filters"}
-        </Button>
-        <div className={`bg-white rounded-lg border p-4 space-y-6 ${showFilters ? "" : "hidden md:block"}`}>
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Filters</h2>
-            {(selectedTags.length > 0 || selectedPriceRange) && (
-              <Button variant="ghost" className="w-full mb-4 text-sm" onClick={clearFilters}>
-                Clear All Filters
-              </Button>
-            )}
-          </div>
-
-          {/* Price Range Filter */}
-          <div className="border-t pt-4">
-            <h3 className="font-semibold mb-3">Price Range</h3>
-            <RadioGroup value={selectedPriceRange || ""} onValueChange={setSelectedPriceRange}>
-              {PRICE_RANGES.map((range) => (
-                <div key={range.label} className="flex items-center space-x-2">
-                  <RadioGroupItem value={`${range.min}-${range.max}`} id={`price-${range.min}`} />
-                  <Label htmlFor={`price-${range.min}`} className="text-sm cursor-pointer">
-                    {range.label}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
-
-          {/* Categories Filter */}
-          <div className="border-t pt-4">
-            <h3 className="font-semibold mb-3">Categories</h3>
-            <Accordion type="multiple" value={expandedCategories} onValueChange={setExpandedCategories}>
-              {Object.entries(TAG_CATEGORIES).map(([category, tags]) => (
-                <AccordionItem value={category} key={category}>
-                  <AccordionTrigger
-                    className={`text-sm hover:no-underline ${
-                      category === "FEU Products" ? "text-[#09850d] font-semibold" : ""
-                    }`}
-                  >
-                    {category}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 pl-2">
-                      {tags.map((tag) => (
-                        <div key={tag} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={tag === "FEU Products" ? "feu-products" : tag}
-                            checked={selectedTags.includes(tag)}
-                            onCheckedChange={(checked) => {
-                              setSelectedTags(checked ? [...selectedTags, tag] : selectedTags.filter((t) => t !== tag))
-                            }}
-                          />
-                          <Label
-                            htmlFor={tag === "FEU Products" ? "feu-products" : tag}
-                            className={
-                              tag === "FEU Products"
-                                ? "text-sm cursor-pointer font-semibold text-teal-500"
-                                : "text-sm cursor-pointer"
-                            }
-                          >
-                            {tag}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        </div>
+    <div className="flex flex-col gap-6 p-4">
+      {/* Search Bar - Always at the top */}
+      <div className="w-full">
+        <Input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full border-2 border-[#09850d] focus:ring-[#09850d] focus:border-[#09850d]"
+        />
       </div>
 
-      <div className="w-full md:w-3/4">
-        <div className="mb-6">
-          <Input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border-2 border-[#09850d] focus:ring-[#09850d] focus:border-[#09850d]"
-          />
-        </div>
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">All Products</h1>
-          <p className="text-sm text-gray-500">
-            {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"} found
-          </p>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Filters Section - Always visible */}
+        <div className="w-full md:w-1/4">
+          <div className="bg-white rounded-lg border p-4 space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Filters</h2>
+              {(selectedTags.length > 0 || selectedPriceRange) && (
+                <Button variant="ghost" className="w-full mb-4 text-sm" onClick={clearFilters}>
+                  Clear All Filters
+                </Button>
+              )}
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="border-t pt-4">
+              <h3 className="font-semibold mb-3">Price Range</h3>
+              <RadioGroup value={selectedPriceRange || ""} onValueChange={setSelectedPriceRange}>
+                {PRICE_RANGES.map((range) => (
+                  <div key={range.label} className="flex items-center space-x-2">
+                    <RadioGroupItem value={`${range.min}-${range.max}`} id={`price-${range.min}`} />
+                    <Label htmlFor={`price-${range.min}`} className="text-sm cursor-pointer">
+                      {range.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+
+            {/* Categories Filter */}
+            <div className="border-t pt-4">
+              <h3 className="font-semibold mb-3">Categories</h3>
+              <Accordion
+                type="multiple"
+                value={expandedCategories}
+                onValueChange={setExpandedCategories}
+                className="space-y-2"
+              >
+                {Object.entries(TAG_CATEGORIES).map(([category, tags]) => (
+                  <AccordionItem value={category} key={category}>
+                    <AccordionTrigger
+                      className={`text-sm hover:no-underline ${
+                        category === "FEU Products" ? "text-[#09850d] font-semibold" : ""
+                      }`}
+                    >
+                      {category}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 pl-2">
+                        {tags.map((tag) => (
+                          <div key={tag} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={tag === "FEU Products" ? "feu-products" : tag}
+                              checked={selectedTags.includes(tag)}
+                              onCheckedChange={(checked) => {
+                                setSelectedTags(
+                                  checked ? [...selectedTags, tag] : selectedTags.filter((t) => t !== tag),
+                                )
+                              }}
+                            />
+                            <Label
+                              htmlFor={tag === "FEU Products" ? "feu-products" : tag}
+                              className={`text-sm cursor-pointer ${
+                                tag === "FEU Products" ? "font-semibold text-[#09850d]" : ""
+                              }`}
+                            >
+                              {tag}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
         </div>
 
-        {filteredProducts.length === 0 && (selectedTags.length > 0 || selectedPriceRange || searchQuery) ? (
-          <div className="text-center py-8">
-            <p className="text-gray-500">No products match your selected filters or search query.</p>
-            <Button variant="link" onClick={clearFilters} className="mt-2">
-              Clear all filters and search
-            </Button>
+        {/* Products Grid */}
+        <div className="w-full md:w-3/4">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold">All Products</h1>
+            <p className="text-sm text-gray-500">
+              {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"} found
+            </p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="flex flex-col">
-                <CardHeader>
-                  <CardTitle className="line-clamp-1">{product.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <Link href={`/products/${product.id}`} className="block">
-                    <ImageContainer
-                      src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300" || "/placeholder.svg"}
-                      alt={product.title}
-                    />
-                  </Link>
-                  <p className="mt-2 line-clamp-2">{product.description}</p>
-                  <p className="font-semibold mt-2">₱{product.price.toFixed(2)}</p>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {product.tags &&
-                      product.tags.map((tag) => (
-                        <span key={tag} className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full">
-                    <Link href={`/products/${product.id}`}>View Details</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
+
+          {filteredProducts.length === 0 && (selectedTags.length > 0 || selectedPriceRange || searchQuery) ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No products match your selected filters or search query.</p>
+              <Button variant="link" onClick={clearFilters} className="mt-2">
+                Clear all filters and search
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <Card key={product.id} className="flex flex-col">
+                  <CardHeader>
+                    <CardTitle className="line-clamp-1">{product.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <Link href={`/products/${product.id}`} className="block">
+                      <ImageContainer
+                        src={product.image_urls?.[0] || "/placeholder.svg?height=160&width=300"}
+                        alt={product.title}
+                      />
+                    </Link>
+                    <p className="mt-2 line-clamp-2">{product.description}</p>
+                    <p className="font-semibold mt-2">₱{product.price.toFixed(2)}</p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {product.tags &&
+                        product.tags.map((tag) => (
+                          <span key={tag} className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full">
+                            {tag}
+                          </span>
+                        ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button asChild className="w-full">
+                      <Link href={`/products/${product.id}`}>View Details</Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
